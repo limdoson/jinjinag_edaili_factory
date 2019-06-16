@@ -10,8 +10,7 @@
 			class="avatar-uploader"
 			:action="serverUrl"
 			accept=".jpg,.png,.jpeg"
-			name="cert"
-			multiple
+			name="img"
 			:show-file-list="false"
 			:on-success="uploadSuccess"
 			:on-error="uploadError"
@@ -21,7 +20,6 @@
 </template>
 
 <script>
-	import config from '../config/index.js'
 	import 'quill/dist/quill.core.css'
 	import 'quill/dist/quill.snow.css'
 	import 'quill/dist/quill.bubble.css'
@@ -31,7 +29,7 @@
 		data () {
 			return {
 				content : '',
-				serverUrl : 'http://flag.xmwxxx.com/admin/wechat/upload',
+				serverUrl : this._config.img_upload_host,
 				editorOption : {
 					placeholder: '请输入内容',
 				    theme: 'snow',  // or 'bubble'
@@ -69,7 +67,7 @@
 			},
 			beforeUpload (file) {
 				//限制文件大小
-				let size = (file.size / 1024 / 1024) < config.upload_img_size;
+				let size = (file.size / 1024 / 1024) < this._config.upload_img_size;
 				if (!size) {
 					this.$message.error('上传图片大小不能超过600KB');
 				} else {
@@ -91,7 +89,7 @@
 			        // 获取光标所在位置
 			        let length = quill.getSelection().index;
 			        // 插入图片  res.info为服务器返回的图片地址
-			        quill.insertEmbed(length, 'image', 'http://flag.xmwxxx.com/img/entrep.7379ab52.png')
+			        quill.insertEmbed(length, 'image', res.data)
 			        // 调整光标到最后
 			        quill.setSelection(length + 1)
 			    } else {

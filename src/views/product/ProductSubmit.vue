@@ -7,33 +7,34 @@
 			<el-step title="其他相关设置" icon="el-icon-edit"></el-step>
 		</el-steps>
 		<!-- 商品基本信息 -->
-		<div v-show='active == 0' class="product-info form-container">
-			<el-form label-width="180px">
+		<div v-show='active == 0 && cls_option' class="product-info form-container">
+			<el-form label-width="180px" >
 				<el-form-item label="商品名称">
-					<el-input></el-input>
+					<el-input placeholder="请输入商品名称" v-model="name"></el-input>
 				</el-form-item>
-				<el-form-item label="商品默认价格">
-					<el-input></el-input>
+				<el-form-item label="商品供应价格">
+					<el-input placeholder="填写商品供应价格,该价格将用于货款结算" type="number" v-model='supply_price'></el-input>
 				</el-form-item>
-				<el-form-item label="会员价">
-					<el-input></el-input>
+				<el-form-item label="建议零售价">
+					<el-input placeholder="填写商品建议零售价" type="number" v-model="msrp"></el-input>
 				</el-form-item>
-				<el-form-item label="商品分类">
-					<!-- <el-select>
-						<el-option>分类1</el-option>
-					</el-select> -->
+				<el-form-item label="商品分类" v-if='cls_option'>
+					<el-cascader
+						:options="cls_option"
+						v-model="t_id">
+					</el-cascader>
 				</el-form-item>
 				<el-form-item label="商品计量单位">
-					<el-input></el-input>
+					<el-input placeholder="填写商品计量单位,如:箱/件/瓶等" v-model="unit"></el-input>
 				</el-form-item>
 				<el-form-item label="商品SKU">
-					<el-input></el-input>
+					<el-input placeholder="填写商品sku码" v-model="sku"></el-input>
 				</el-form-item>
 				<el-form-item label="商品库存">
-					<el-input></el-input>
+					<el-input placeholder="填写商品库存" v-model="stock" type="number"></el-input>
 				</el-form-item>
 				<el-form-item label="商品虚拟销量">
-					<el-input></el-input>
+					<el-input placeholder="填写商品销量,该销量将显示在用户端" v-model="fake_sale" type="number"></el-input>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -44,14 +45,10 @@
 					<p class="tips">请确保商品封面图、商品主图尺寸一致，且不超过600kb</p>
 				</el-form-item>
 				<el-form-item label="商品封面图">
-					<!-- <el-upload>
-						<el-button type="primary" size="small" icon='el-icon-upload'>点击上传</el-button>
-					</el-upload> -->
+					<up-load v-model='cover' :imageUrl='cover'></up-load>
 				</el-form-item>
 				<el-form-item label="商品主图">
-					<!-- <el-upload>
-						<el-button type="primary" size="small" icon='el-icon-upload'>点击上传</el-button>
-					</el-upload> -->
+					<pics-upload v-model='img'></pics-upload>
 				</el-form-item>
 				<el-form-item label="商品详情"  style='line-height: 30px;'>
 					<editor></editor>
@@ -67,14 +64,14 @@
 				<!-- 选择商品属性、规格 -->
 				<el-form-item label='选择商品属性/规格组'>
 					<el-checkbox-group size='small' v-model='attr_group_checked'>
-						<el-checkbox-button  v-for="item in attr_group" :label="item" :key='item.id' :checked='item.checked'>{{item.label}}</el-checkbox-button>
+						<el-checkbox-button  v-for="item in attr_group" :label="item" :key='item.value' :checked='item.checked'>{{item.label}}</el-checkbox-button>
 					</el-checkbox-group>
 					<div v-if='attr_group_checked'>
 						<ul>
 							<li v-for='item in attr_group_checked' class="f-s" :key='item.id'>
 								<span>{{item.label}}：</span>
 								<el-checkbox-group v-model='item.checkList' >
-									<el-checkbox :label="attr" v-for='attr in item.children' :key='attr.id' :checked="attr.checked" @change='choseAttr'>{{attr.label}}</el-checkbox>
+									<el-checkbox :label="attr" v-for='attr in item.children' :key='attr.value' :checked="attr.checked" @change='choseAttr'>{{attr.label}}</el-checkbox>
 								</el-checkbox-group>
 							</li>
 						</ul>
@@ -88,20 +85,18 @@
 						stripe
 						ref="multipleTable">
 						<el-table-column prop='attr_name' label='规格/属性名称'>
-							
 						</el-table-column>
-						<el-table-column prop='market_price' label='市场价'>
+						<el-table-column prop='supply_price' label='供应价'>
 							<template slot-scope='scope'>
 								<el-input v-model="scope.row.market_price"></el-input>
 							</template>
 						</el-table-column>
-						<el-table-column prop='user_price' label='会员价'>
+						<el-table-column prop='img' label='产品图片'>
 							<template slot-scope='scope'>
-								<el-input v-model="scope.row.user_price"></el-input>
+								<up-load v-model='scope.row.img'></up-load>
 							</template>
 						</el-table-column>
-						<el-table-column prop='img_url' label='产品图片'></el-table-column>
-						<el-table-column prop='stock_number' label='库存'>
+						<el-table-column prop='stock' label='库存'>
 							<template slot-scope='scope'>
 								<el-input v-model="scope.row.stock_number"></el-input>
 							</template>
@@ -118,7 +113,7 @@
 		<div class="text-center padding">
 			<el-button type="danger" size="small" @click='preStep' v-if='active > 0 '>上一步</el-button>
 			<el-button type="danger" size="small" @click='nextStep' v-if='active != 2' >下一步</el-button>
-			<el-button type="primary" size="small" v-if='active == 2' @click='test'>发布商品</el-button>
+			<el-button type="primary" size="small" v-if='active == 2' @click='submitProduct'>发布商品</el-button>
 		</div>
 	</div>
 </template>
@@ -132,61 +127,51 @@
 				active : 0,//默认激活选项卡
 				attr_group_checked : [],//已选规格属性组
 				attr_table_data : [],//生成表单的数据
-				attr_group : [
-					{
-						id : 26,
-						label : '颜色',
-						parent_id : 0,
-						checked : true,
-						checkList : [],
-						children : [
-							{
-								parent_id :26,
-								label : '绿色',
-								id : 25,
-								checked : true,
-							},{
-								checked : false,
-								parent_id :26,
-								label : '红色',
-								id : 29
-							}
-						]
-					},{
-						id : 30,
-						label : '容量',
-						parent_id : 0,
-						checkList : [],
-						children : [
-							{
-								checked : false,
-								parent_id :30,
-								label : '300ML',
-								id : 31
-							},{
-								checked : false,
-								parent_id :30,
-								label : '400ML',
-								id : 32
-							}
-						]
-					}
-				]
+				cls : [],//商品分类
+				cls_option : null,//商品分类选项数据
+				attr_group :null,
+				name : null,//商品名称
+				t_id : [],//商品分类ID
+				supply_price : null,//商品供应价
+				msrp : null,//建议零售价
+				unit : null,//计量单位
+				sku : null,//SKU
+				stock : null,//商品库存
+				fake_sale : null,//虚拟销量
+				cover : null,//封面图
+				content : null,//商品详情
+				img  : [],//商品主图集合
+				attribute : null,//商品规格属性
 			}
 		},
 		created () {
-			console.log(this.attr_group_checked)
+			this.initData();
+			
 		},
-		
+		mounted () {
+			//获取商品分类
+			this.http.post('/v1/f_goods/getType',{
+				
+			}).then(res => {
+				this.cls_option = res.data;
+				
+			})
+		},
 		methods : {
+			initData(){
+				//获取初始需要数据
+				this.http.post('v1/f_goods/getType',{
+					
+				}).then(res => {
+					this.cls_option = res.data;
+					
+				}) 
+			},
 			nextStep () {
 				this.active ++;
 			},
 			preStep () {
 				this.active --;
-			},
-			test () {
-				console.log(this.attr_group_checked)
 			},
 			choseAttr () {
 				this.getAttrArr()
@@ -206,20 +191,66 @@
 				if (attr_tmp.length) {
 					this.attr_table_data = this.utils.data_for_attrArr(attr_tmp)
 				}
-				console.log(this.attr_table_data)
 			},
-			
+			//发布商品函数
+			submitProduct () {
+				console.log(this.attr_group)
+				this.http.post('/v1/f_goods/test',{
+					a : JSON.stringify(this.attr_group),
+					b : JSON.stringify(this.attr_table_data)
+				}).then( res => {
+					console.log(res)
+				})
+				// if (!this.name) {
+				// 	this.utils.msg('请填写商品名称');
+				// 	return;
+				// }
+				// if (!this.t_id || this.t_id.length == 0) {
+				// 	this.utils.msg('请选择商品分类');
+				// 	return;
+				// }
+				// if (!this.supply_price) {
+				// 	this.utils.msg('请填写商品供应价格');
+				// 	return;
+				// }
+				// if (!this.stock) {
+				// 	this.utils.msg('请填写商品库存');
+				// 	return;
+				// }
+				// if(!this.cover) {
+				// 	this.utils.msg('请上传商品封面图');
+				// 	return;
+				// }
+				// if (!this.img || this.img.length == 0) {
+				// 	this.utils.msg('请至少上传一张商品主图');
+				// 	return;
+				// }
+				// this.http.post('/v1/f_goods/goodsAdd',{
+				// 	name : this.name,
+				// 	t_id : this.t_id,
+				// 	supply_price : this.supply_price,
+				// 	msrp : this.msrp,
+				// 	unit : this.unit,
+				// 	sku : this.sku,
+				// 	stock : this.stock,
+				// 	fake_sale : this.fake_sale,
+				// 	cover : this.cover,
+				// 	content : this.content,
+				// 	img : this.img.length ? this.img : null,
+				// 	attribute : this.attribute
+				// }).then(res => {})
+			}
 		},
-		//mounted () {},
-		// watch () {
-		// 	a (n,o) {
-		// 		
-		// 	}
-		// },
-		// computed () {
-		// 	a () {
-		// 		return this.a
-		// 	}
-		// },
+		watch : {
+			active (n) {
+				if (n == '2') {
+					//获取已设置的商品规格属性选项数据
+					this.http.post('/v1/f_goods/factoryAttributeGet')
+						.then(res =>{
+							this.attr_group = res.data;
+						})
+				}
+			},
+		}
 	}
 </script>

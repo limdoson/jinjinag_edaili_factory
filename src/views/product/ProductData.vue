@@ -6,14 +6,13 @@
 				<el-select v-model='search_type'>
 					<el-option label='商品ID' value='1'></el-option>
 					<el-option label='商品名称' value='2'></el-option>
-					
 				</el-select>
 			</el-col>
 			<el-col :span='4'>
-				<el-input placeholder="请输入搜索关键词"></el-input>
+				<el-input placeholder="请输入搜索关键词" v-model="key_word"></el-input>
 			</el-col>
 			<el-col :span='2'>
-				<el-button type='primary' size="small" icon="el-icon-search">搜索</el-button>
+				<el-button type='primary' size="small" icon="el-icon-search" @click='search'>搜索</el-button>
 			</el-col>
 		</el-row>
 		<!-- 数据表 -->
@@ -25,24 +24,20 @@
 			<el-table-column prop='id' label='ID'></el-table-column>
 			<el-table-column prop='nick_name' label='图片'>
 				<template slot-scope='scope'>
-					<img :src="scope.row.img" alt="" width="80px">
+					<img :src="scope.row.cover" alt="" width="80px">
 				</template>
 			</el-table-column>
-			<el-table-column prop='title' label='商品名称'></el-table-column>
+			<el-table-column prop='name' label='商品名称'></el-table-column>
 			<el-table-column prop='supply_price' label='供货价'></el-table-column>
-			<el-table-column prop='sales_num' label='销量'></el-table-column>
-			<el-table-column prop='sales_num' label='销售额'></el-table-column>
+			<el-table-column prop='sale' label='销量'></el-table-column>
+			<el-table-column prop='sale_money' label='销售额'></el-table-column>
 			<el-table-column prop='stock' label='库存'></el-table-column>
-			<el-table-column prop='user_identity' label="商品状态">
-				<template slot-scope='scope'>
-					<span class="red" v-if='scope.row.status == 0'>下架中</span>
-					<span class="green" v-if='scope.row.status ==1'>在售</span>
-				</template>
-			</el-table-column>
-			<el-table-column prop='time' label='添加时间'></el-table-column>
-			<el-table-column fixed='right' label='操作' width='200'>
+			<el-table-column prop='is_sale' label="商品状态"></el-table-column>
+			<el-table-column prop='add_time' label='添加时间' width="180"></el-table-column>
+			<el-table-column fixed='right' label='操作' width="180">
 				<template slot-scope="scope">
 					<el-button type='text' size='small' @click="$router.push('member-detail')">详情</el-button>
+					<el-button type='text' size='small' @click="deleteItem(scope.row)">删除商品</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -52,7 +47,8 @@
 			<el-pagination
 			  background
 			  layout="prev, pager, next"
-			  :total="1000">
+			  :total="total"
+			  @current='currentChange'>
 			</el-pagination>
 		</div>
 	</div>
@@ -63,39 +59,58 @@
 		components: {},
 		data () {
 			return {
-				search_type : '1',
+				search_type : '1',//搜搜类型
 				key_word : null,//搜索关键字
-				list : [
-					{
-						id :1,
-						img : 'http://flag.xmwxxx.com/img/entrep.7379ab52.png',
-						title : '商品名称',
-						supply_price : 100,
-						market_price : 500,
-						stock : 1000,
-						sales_num : 0,
-						status : 0,//0下架，1上架中
-						time : '2019-08-08'
-					},{
-						id :1,
-						img : 'http://flag.xmwxxx.com/img/entrep.7379ab52.png',
-						title : '商品名称',
-						supply_price : 100,
-						market_price : 500,
-						sales_num : 505,
-						stock : 1000,
-						status : 1,//0下架，1上架中
-						time : '2019-08-08'
-					}
-				]
+				list : null,
+				limit : 10,
+				page :1,
+				total : 1
 			}
 		},
 		created () {
-			
+			this.initData();
 		},
 		
 		methods : {
-			
+			initData() {
+				this.http.post('/v1/f_goods/goodsGetAll',{
+					id : this.search_type == '1' ? this.key_word : null,
+					name : this.search_type == '2' ? this.key_word : null,
+					page : this.page,
+					limit : this.limit,
+				}).then(res => {
+					this.list = res.data.data;
+					this.total = res.data.total;
+				})
+			},
+			//商品搜索
+			search () {
+				if (!this.key_word) {
+					this.utils.msg('请输入搜索关键词');
+					return;
+				}
+				this.page = 1;
+				this.initData()
+			},
+			//商品删除
+			deleteItem (item) {
+				this.http.post('/v1/f_goods/goodsDel',{
+					id : item.id
+				}).then( res => {
+					this.$message({
+						type : 'success',
+						message : res.msg
+					});
+					this.list = this.list.filter( _item => {
+						return _item.id != item.id;
+					})
+				})
+			},
+			//页码切换
+			currentChange (page) {
+				this.page = page;
+				this.initData();
+			}
 		},
 		//mounted () {},
 		// watch () {

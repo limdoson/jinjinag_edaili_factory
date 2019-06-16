@@ -6,9 +6,9 @@ function resolve(dir) {
 }
 module.exports = {
     // 基本路径
-    publicPath: process.env.NODE_ENV == 'development' ? './' : '/admin/',
+    publicPath: process.env.NODE_ENV == 'development' ? './' : '/factory/',
     devServer: {
-        port: 8888,
+        port: 8080,
         open: true
     },
     configureWebpack: {

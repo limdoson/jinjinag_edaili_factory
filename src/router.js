@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 let router = new Router({
-    base : process.env.NODE_ENV == 'development' ? './' : '/fac_admin/',
+    base : process.env.NODE_ENV == 'development' ? './' : '/factory/',
     mode : 'hash',
     routes : [
         {

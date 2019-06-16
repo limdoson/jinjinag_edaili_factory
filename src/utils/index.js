@@ -33,11 +33,9 @@ class Utils extends Vue {
 				} else {
 					obj = {
 						attr_name : stringBuffer + arr[level][i].label + '/',
-						market_price : null,
-						user_price : null,
-						img_url : null,
-						img_url_data : null,
-						stock_number : null,
+						supply_porice : null,
+						img : null,
+						stock : null,
 						sku : null
 					}
 					this.attr_result.push(obj)
@@ -47,11 +45,9 @@ class Utils extends Vue {
 			for (let i = 0; i < arr[0].length; i ++) {
 				obj = {
 					attr_name : stringBuffer + arr[level][i].label,
-					market_price : null,
-					user_price : null,
-					img_url : null,
-					img_url_data : null,
-					stock_number : null,
+					supply_porice : null,
+					img : null,
+					stock : null,
 					sku : null
 				}
 				this.attr_result.push(obj)
