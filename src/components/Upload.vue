@@ -69,6 +69,10 @@
 </script>
 <style scoped>
 	img {
+<<<<<<< HEAD
+		width: 80px;
+=======
 		width: 180px;
+>>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 	}
 </style>

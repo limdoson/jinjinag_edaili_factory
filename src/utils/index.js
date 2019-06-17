@@ -33,7 +33,11 @@ class Utils extends Vue {
 				} else {
 					obj = {
 						attr_name : stringBuffer + arr[level][i].label + '/',
+<<<<<<< HEAD
+						supply_price : null,
+=======
 						supply_porice : null,
+>>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 						img : null,
 						stock : null,
 						sku : null
@@ -45,7 +49,11 @@ class Utils extends Vue {
 			for (let i = 0; i < arr[0].length; i ++) {
 				obj = {
 					attr_name : stringBuffer + arr[level][i].label,
+<<<<<<< HEAD
+					supply_price : null,
+=======
 					supply_porice : null,
+>>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 					img : null,
 					stock : null,
 					sku : null

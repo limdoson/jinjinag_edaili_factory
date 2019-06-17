@@ -23,6 +23,9 @@ let router = new Router({
 				},{//已发布商品
 					path : 'product-data',
 					component : () => import('./views/product/ProductData'),
+				},{//商品详情
+					path : 'product-detail/:id',
+					component : () => import('./views/product/ProductDetail'),
 				},{//快递设置
 					path : 'express-setting',
 					component : () => import('./views/product/Express'),

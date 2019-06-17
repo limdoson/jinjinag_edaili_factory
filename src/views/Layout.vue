@@ -8,7 +8,7 @@
 			<!--登陆者下拉菜单-->
 			<el-dropdown @command="handleCommand">
 			  	<span class="el-dropdown-link">
-				    超级管理员<i class="el-icon-arrow-down el-icon--right"></i>
+				    {{$store.state.admin_info.name}}<i class="el-icon-arrow-down el-icon--right"></i>
 			  	</span>
 			  	<el-dropdown-menu slot="dropdown" @command='handleCommand()'>
 				    <el-dropdown-item command="resetPwd" >修改密码</el-dropdown-item>

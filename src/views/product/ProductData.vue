@@ -36,7 +36,11 @@
 			<el-table-column prop='add_time' label='添加时间' width="180"></el-table-column>
 			<el-table-column fixed='right' label='操作' width="180">
 				<template slot-scope="scope">
+<<<<<<< HEAD
+					<el-button type='text' size='small' @click="$router.push('product-detail/'+scope.row.id)">详情</el-button>
+=======
 					<el-button type='text' size='small' @click="$router.push('member-detail')">详情</el-button>
+>>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 					<el-button type='text' size='small' @click="deleteItem(scope.row)">删除商品</el-button>
 				</template>
 			</el-table-column>
