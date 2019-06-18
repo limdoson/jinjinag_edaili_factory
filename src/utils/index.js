@@ -32,12 +32,9 @@ class Utils extends Vue {
 					this.data_for_attrArr(arr,level + 1, stringBuffer + arr[level][i].label + '/')
 				} else {
 					obj = {
-						attr_name : stringBuffer + arr[level][i].label + '/',
-<<<<<<< HEAD
+						name : stringBuffer + arr[level][i].label + '/',
 						supply_price : null,
-=======
 						supply_porice : null,
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 						img : null,
 						stock : null,
 						sku : null
@@ -48,12 +45,9 @@ class Utils extends Vue {
 		} else {//一维数组
 			for (let i = 0; i < arr[0].length; i ++) {
 				obj = {
-					attr_name : stringBuffer + arr[level][i].label,
-<<<<<<< HEAD
+					name : stringBuffer + arr[level][i].label,
 					supply_price : null,
-=======
 					supply_porice : null,
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 					img : null,
 					stock : null,
 					sku : null

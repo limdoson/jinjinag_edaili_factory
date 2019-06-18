@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	//
 	export default {
 		//由于elementui渲染filelist的数据要求，传进来的value必须是数组
 		props : ['value'],
@@ -24,6 +25,10 @@
 			}
 		},
 		created () {
+			
+			
+		},
+		mounted() {
 			
 		},
 		methods : {
@@ -55,9 +60,15 @@
 			},
 			//根据fileList数组，获取其中的已上传图片的链接，向外emit
 			getUrlList (fileList) {
+				
 				if (fileList.length) {
 					this.file_list = fileList.map(item => {
-						return item.response.data;
+						
+						if (item.response) {
+							return item.response.data;
+						} else {
+							return item.url
+						}
 					})
 					this.$emit('input',this.file_list)
 				} else {
@@ -68,6 +79,14 @@
 		watch : {
 			value (n) {
 				this.file_list = n;
+				if (this.com_file_list.length == 0) {
+					this.com_file_list = n.map((item,index) => {
+						return {
+							name : index,
+							url : item
+						}
+					})
+				}
 			},
 		}
 	}

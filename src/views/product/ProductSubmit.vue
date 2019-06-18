@@ -11,7 +11,6 @@
 			<el-form label-width="180px" >
 				<el-form-item label="商品名称">
 					<el-input placeholder="请输入商品名称" v-model="name"></el-input>
-<<<<<<< HEAD
 				</el-form-item>
 				<el-form-item label="商品供应价格">
 					<el-input placeholder="填写商品供应价格,该价格将用于货款结算" type="number" v-model='supply_price'></el-input>
@@ -19,15 +18,6 @@
 				<!-- <el-form-item label="建议零售价">
 					<el-input placeholder="填写商品建议零售价" type="number" v-model="msrp"></el-input>
 				</el-form-item> -->
-=======
-				</el-form-item>
-				<el-form-item label="商品供应价格">
-					<el-input placeholder="填写商品供应价格,该价格将用于货款结算" type="number" v-model='supply_price'></el-input>
-				</el-form-item>
-				<el-form-item label="建议零售价">
-					<el-input placeholder="填写商品建议零售价" type="number" v-model="msrp"></el-input>
-				</el-form-item>
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 				<el-form-item label="商品分类" v-if='cls_option'>
 					<el-cascader
 						:options="cls_option"
@@ -56,20 +46,12 @@
 				</el-form-item>
 				<el-form-item label="商品封面图">
 					<up-load v-model='cover' :imageUrl='cover'></up-load>
-<<<<<<< HEAD
-				</el-form-item>
-				<el-form-item label="原商品主图">
-					
-				</el-form-item>
-				<el-form-item label="重新上传商品主图">
-=======
 				</el-form-item>
 				<el-form-item label="商品主图">
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 					<pics-upload v-model='img'></pics-upload>
 				</el-form-item>
 				<el-form-item label="商品详情"  style='line-height: 30px;'>
-					<editor></editor>
+					<editor v-model='content'></editor>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -81,25 +63,15 @@
 				</el-form-item>
 				<!-- 选择商品属性、规格 -->
 				<el-form-item label='选择商品属性/规格组'>
-<<<<<<< HEAD
 					<el-checkbox-group size='small' v-model='product_property_group'>
 						<el-checkbox-button  v-for="(item,index) in attr_group" :label="item" :key='item.value' @change='changeCheckList(item,index,$event)'>{{item.label}}</el-checkbox-button>
-=======
-					<el-checkbox-group size='small' v-model='attr_group_checked'>
-						<el-checkbox-button  v-for="item in attr_group" :label="item" :key='item.value' :checked='item.checked'>{{item.label}}</el-checkbox-button>
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 					</el-checkbox-group>
-
 					<div >
 						<ul>
 							<li v-for='item in product_property_group' class="f-s" :key='item.id'>
 								<span>{{item.label}}：</span>
 								<el-checkbox-group v-model='item.checkList' >
-<<<<<<< HEAD
 									<el-checkbox :label="attr" v-for='attr in item.children' :key='attr.id' @change='changeProperty'>{{attr.label}}</el-checkbox>
-=======
-									<el-checkbox :label="attr" v-for='attr in item.children' :key='attr.value' :checked="attr.checked" @change='choseAttr'>{{attr.label}}</el-checkbox>
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
 								</el-checkbox-group>
 							</li>
 						</ul>
@@ -177,34 +149,18 @@
 			
 		},
 		mounted () {
-<<<<<<< HEAD
-=======
-			//获取商品分类
-			this.http.post('/v1/f_goods/getType',{
-				
-			}).then(res => {
-				this.cls_option = res.data;
-				
-			})
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
+			
 		},
 		methods : {
 			initData(){
 				//获取初始需要数据
-<<<<<<< HEAD
 				this.http.post('/v1/f_goods/goodsGetAdd',{
 					
 				}).then(res => {
 					this.cls_option = res.data.type;
 					this.attr_group = res.data.attribute;
-=======
-				this.http.post('v1/f_goods/getType',{
-					
-				}).then(res => {
-					this.cls_option = res.data;
-					
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
-				}) 
+
+				})
 			},
 			nextStep () {
 				this.active ++;
@@ -212,16 +168,15 @@
 			preStep () {
 				this.active --;
 			},
-<<<<<<< HEAD
 			changeCheckList (item,index ,event) {
 				//如果是非选中状态，则将checkList清空
 				if (!event) {
 					item.checkList = []
 				}
-=======
-			choseAttr () {
-				this.getAttrArr()
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
+			},
+			//获取富文本的内容
+			changeContent (content) {
+				this.content = content;
 			},
 			/*
 			 * 修改属性规格
@@ -240,7 +195,6 @@
 			},
 			//发布商品函数
 			submitProduct () {
-<<<<<<< HEAD
 				if (!this.name) {
 					this.utils.msg('请填写商品名称');
 					return;
@@ -286,73 +240,11 @@
 						type : 'success',
 						message : '添加成功'
 					})
-					setTimeout(() => {
-						location.reload()
-					},1500)
+					// setTimeout(() => {
+					// 	location.reload()
+					// },1500)
 				})
 			}
 		},
-		watch : {
-			
-=======
-				console.log(this.attr_group)
-				this.http.post('/v1/f_goods/test',{
-					a : JSON.stringify(this.attr_group),
-					b : JSON.stringify(this.attr_table_data)
-				}).then( res => {
-					console.log(res)
-				})
-				// if (!this.name) {
-				// 	this.utils.msg('请填写商品名称');
-				// 	return;
-				// }
-				// if (!this.t_id || this.t_id.length == 0) {
-				// 	this.utils.msg('请选择商品分类');
-				// 	return;
-				// }
-				// if (!this.supply_price) {
-				// 	this.utils.msg('请填写商品供应价格');
-				// 	return;
-				// }
-				// if (!this.stock) {
-				// 	this.utils.msg('请填写商品库存');
-				// 	return;
-				// }
-				// if(!this.cover) {
-				// 	this.utils.msg('请上传商品封面图');
-				// 	return;
-				// }
-				// if (!this.img || this.img.length == 0) {
-				// 	this.utils.msg('请至少上传一张商品主图');
-				// 	return;
-				// }
-				// this.http.post('/v1/f_goods/goodsAdd',{
-				// 	name : this.name,
-				// 	t_id : this.t_id,
-				// 	supply_price : this.supply_price,
-				// 	msrp : this.msrp,
-				// 	unit : this.unit,
-				// 	sku : this.sku,
-				// 	stock : this.stock,
-				// 	fake_sale : this.fake_sale,
-				// 	cover : this.cover,
-				// 	content : this.content,
-				// 	img : this.img.length ? this.img : null,
-				// 	attribute : this.attribute
-				// }).then(res => {})
-			}
-		},
-		watch : {
-			active (n) {
-				if (n == '2') {
-					//获取已设置的商品规格属性选项数据
-					this.http.post('/v1/f_goods/factoryAttributeGet')
-						.then(res =>{
-							this.attr_group = res.data;
-						})
-				}
-			},
->>>>>>> c682996d9de421ea46b2902c6935dc55482c6071
-		}
 	}
 </script>

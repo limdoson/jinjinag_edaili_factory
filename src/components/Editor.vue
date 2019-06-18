@@ -26,9 +26,10 @@
 	import {quillEditor, Quill} from 'vue-quill-editor'
 	export default {
 		components: {quillEditor},
+		props : ['value'],
 		data () {
 			return {
-				content : '',
+				content : this.value,
 				serverUrl : this._config.img_upload_host,
 				editorOption : {
 					placeholder: '请输入内容',
@@ -63,7 +64,7 @@
 		
 		methods : {
 			editorChange (e) {
-				this.$emit('change',this.content);
+				this.$emit('input',this.content);
 			},
 			beforeUpload (file) {
 				//限制文件大小
@@ -105,6 +106,11 @@
 			    this.$message.error('图片插入失败')
 			},
 		},
+		watch : {
+			value (n) {
+				this.content = n;
+			}
+		}
 		//mounted () {},
 		// watch () {
 		// 	a (n,o) {

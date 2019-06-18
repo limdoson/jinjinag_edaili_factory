@@ -51,7 +51,7 @@
 					<pics-upload v-model='img'></pics-upload>
 				</el-form-item>
 				<el-form-item label="商品详情"  style='line-height: 30px;'>
-					<editor></editor>
+					<editor v-model='content'></editor>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -61,16 +61,14 @@
 				<el-form-item label='提示'>
 					<p class="tips">该步骤内容如不需要，不需要做任何操作，直接保存即可。如需要商品规格/属性设置，请选择好规格/属性后，再填写相关规格/属性对应信息。</p>
 				</el-form-item>
-				<el-form-item label='提示'>
-					<p class="tips">编辑时如果重新选择商品属性/规格组，原始保存的信息将被删除，请谨慎操作。</p>
-				</el-form-item>
 				<!-- 选择商品属性、规格 -->
-				<el-form-item label='选择商品属性/规格组'>
-					<el-checkbox-group size='small' v-model='product_property_group'>
+				<el-form-item label='已选商品属性/规格组'>
+					<el-checkbox-group size='small' v-model='product_property_group' >
 						<el-checkbox-button  
 							v-for="(item,index) in attr_group" 
 							:label="item" :key='item.value' 
 							:checked='item.checked'
+							:disabled='attribute_disabled'
 							@change='changeCheckList(item,index,$event)'>{{item.label}}
 						</el-checkbox-button>
 					</el-checkbox-group>
@@ -79,11 +77,12 @@
 							<li v-for='item in product_property_group' class="f-s" :key='item.id'>
 								<span>{{item.label}}：</span>
 								<el-checkbox-group v-model='item.checkList' >
-									<el-checkbox :label="attr" v-for='attr in item.children' :checked="attr.checked" :key='attr.id' @change='changeProperty'>{{attr.label}}</el-checkbox>
+									<el-checkbox :disabled='attribute_disabled' :label="attr" v-for='attr in item.children' :checked="attr.checked" :key='attr.id' @change='changeProperty'>{{attr.label}}</el-checkbox>
 								</el-checkbox-group>
 							</li>
 						</ul>
 					</div>
+					<el-button type="danger" size="small" @click='changeChosedAttr' v-if='attribute_disabled'>重新选择商品属性/规格组</el-button>
 				</el-form-item>
 				<!-- 填写商品属性规格相关信息 -->
 				<el-form-item label='填写对应规格/属性信息' v-if='attr_table_data && attr_table_data.length'>
@@ -92,7 +91,7 @@
 						:header-cell-style = "{backgroundColor: '#fafafa'}"
 						stripe
 						ref="multipleTable">
-						<el-table-column prop='attr_name' label='规格/属性名称'>
+						<el-table-column prop='name' label='规格/属性名称'>
 						</el-table-column>
 						<el-table-column prop='supply_price' label='供应价'>
 							<template slot-scope='scope'>
@@ -119,10 +118,11 @@
 			</el-form>
 		</div>
 		<div class="text-center padding">
+		
 			<el-button type="info" size="small" icon='el-icon-back' @click='$router.back()'>返回</el-button>
 			<el-button type="danger" size="small" @click='preStep' v-if='active > 0 '>上一步</el-button>
 			<el-button type="danger" size="small" @click='nextStep' v-if='active != 2' >下一步</el-button>
-			<el-button type="primary" size="small" v-if='active == 2' @click='submitProduct'>保存编辑</el-button>
+			<el-button type="primary" size="small" v-if='active == 2' @click='updateProduct'>保存编辑</el-button>
 		</div>
 	</div>
 </template>
@@ -133,14 +133,13 @@
 		components: {editor},
 		data () {
 			return {
-				active : 2,//默认激活选项卡
+				active : 0,//默认激活选项卡
 				product_property_group : [],//已选规格属性组
 				attr_table_data : [],//生成表单的数据
-				cls : [],//商品分类
+				t_id : [],//商品分类ID
 				cls_option : null,//商品分类选项数据
 				attr_group :null,
 				name : null,//商品名称
-				t_id : [],//商品分类ID
 				supply_price : null,//商品供应价
 				msrp : null,//建议零售价
 				unit : null,//计量单位
@@ -151,6 +150,7 @@
 				content : null,//商品详情
 				img  : [],//商品主图集合
 				attribute : null,//商品规格属性
+				attribute_disabled : true,//商品规格属性是否可选，默认不可选
 			}
 		},
 		created () {
@@ -160,15 +160,28 @@
 		mounted () {
 		},
 		methods : {
+			test () {
+				console.log(this.product_property_group)
+			},
 			initData(){
 				//获取初始需要数据
 				this.http.post('/v1/f_goods/goodsGetUpd',{
 					id : this.$route.params.id
 				}).then(res => {
-					this.attr_group = res.data.attribute;
-					console.log(this.product_property_group)
-					// this.cls_option = res.data.type;
-					// this.attr_group = res.data.attribute;
+					this.attr_group = res.data.attribute;//已选属性
+					this.cls_option = res.data.type;//商品类型
+					this.t_id = JSON.parse(res.data.goods.t_id_json);
+					this.name = res.data.goods.name;
+					this.supply_price = res.data.goods.supply_price;
+					this.stock = res.data.goods.stock;
+					this.unit = res.data.goods.unit;
+					this.sku = res.data.goods.sku;
+					this.fake_sale = res.data.goods.fake_sale;
+					this.cover = res.data.goods.cover;
+					this.img = res.data.goods.img;
+					this.content = res.data.goods.content;
+					this.attr_table_data = res.data.goods.attribute;
+					
 				}) 
 			},
 			nextStep () {
@@ -198,8 +211,18 @@
 					this.attr_table_data = null
 				}
 			},
+			//changeChosedAttr
+			changeChosedAttr () {
+				this.$confirm('重新选择商品规格属性组并保存后，原商品规格属性数据将被覆盖, 是否继续?', '提示', {
+					  confirmButtonText: '确定',
+					  cancelButtonText: '取消',
+					  type: 'warning'
+				}).then(() => {
+					this.attribute_disabled = false;
+				})
+			},
 			//发布商品函数
-			submitProduct () {
+			updateProduct () {
 				if (!this.name) {
 					this.utils.msg('请填写商品名称');
 					return;
@@ -224,11 +247,12 @@
 					this.utils.msg('请至少上传一张商品主图');
 					return;
 				}
-				this.http.post('/v1/f_goods/goodsAdd',{
+				this.http.post('/v1/f_goods/goodsUpd',{
+					id : this.$route.params.id,
 					name : this.name,
 					t_id : this.t_id[this.t_id.length -1],
+					tIdJson : JSON.stringify(this.t_id),
 					supply_price : this.supply_price,
-					msrp : this.msrp,
 					unit : this.unit,
 					sku : this.sku,
 					stock : this.stock,
@@ -242,11 +266,8 @@
 					this.$message({
 						showIcon : true,
 						type : 'success',
-						message : '添加成功'
+						message : '编辑成功'
 					})
-					setTimeout(() => {
-						location.reload()
-					},1500)
 				})
 			}
 		},
