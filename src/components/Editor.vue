@@ -61,7 +61,9 @@
 		created () {
 			
 		},
-		
+		mounted () {
+			this.$refs.myQuillEditor.$el.childNodes[2].style.height = '400px'
+		},
 		methods : {
 			editorChange (e) {
 				this.$emit('input',this.content);
@@ -85,6 +87,7 @@
 			},
 			uploadSuccess (res, file) {
 				let quill = this.$refs.myQuillEditor.quill
+				
 			    // 如果上传成功
 			    if (res.code == '200' ) {
 			        // 获取光标所在位置
@@ -124,3 +127,8 @@
 		// },
 	}
 </script>
+<style scoped>
+	.ql-editor {
+		height: 400px;
+	}
+</style>
