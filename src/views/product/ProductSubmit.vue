@@ -110,7 +110,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="text-center padding">
+		<div class="text-center padding steps">
 			<el-button type="danger" size="small" @click='preStep' v-if='active > 0 '>上一步</el-button>
 			<el-button type="danger" size="small" @click='nextStep' v-if='active != 2' >下一步</el-button>
 			<el-button type="primary" size="small" v-if='active == 2' @click='submitProduct'>发布商品</el-button>
