@@ -17,7 +17,10 @@ let router = new Router({
                 {
                     path : '',
                     component : () => import('./views/Home')
-                },{//发布商品
+                },{//配送员设置
+					path : 'distributor-setting',
+					component : () => import('./views/setting/DistributorSetting'),
+				},{//发布商品
 					path : 'product-submit',
 					component : () => import('./views/product/ProductSubmit'),
 				},{//已发布商品

@@ -5,6 +5,20 @@ import store from '@/store.js';
 
 let menu = [
     {
+		title : '设置',
+		index : '1',
+		sub_menu : [
+			{
+				id : '1-1',
+				name : '快递设置',
+				path : '/index/express-setting'
+			},{
+				id : '1-2',
+				name : '配送员设置',
+				path : '/index/distributor-setting'
+			}
+		]
+	},{
 		title : '商品管理',
 		index : '7',
 		sub_menu : [
