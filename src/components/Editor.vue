@@ -16,6 +16,11 @@
 			:on-error="uploadError"
 			:before-upload="beforeUpload">
 		</el-upload>
+		<!-- 隐藏的文件上传 -->
+		<el-upload class="upload-demo" :action="qnLocation" :before-upload='beforeUpload' :data="uploadData" :on-success='upScuccess'
+			ref="upload" style="display:none">
+			<el-button size="small" type="primary" id="imgInput" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="插入中,请稍候">点击上传</el-button>
+		</el-upload>
 	</div>
 </template>
 
@@ -42,7 +47,7 @@
 								[{'size': ['small', false, 'large', 'huge']}],
 								[{'color': []}, {'background': []}],
 								[{'align': []}],
-								['image']
+								['video','image']
 							],  // 工具栏
 				            handlers: {
 				                'image': function (value) {
@@ -55,14 +60,17 @@
 				            }
 				        }
 				    }
-				}
+				},
+				uploadType : '',//文件上传类型
 			}
 		},
 		created () {
 			
 		},
 		mounted () {
-			this.$refs.myQuillEditor.$el.childNodes[2].style.height = '400px'
+			this.$refs.myQuillEditor.$el.childNodes[2].style.height = '400px';
+			//为视频点击绑定时间
+			this.$refs.myQuillEditor.quill.getModule('toolbar').addHandler('video', this.videoHandler) 
 		},
 		methods : {
 			editorChange (e) {
@@ -108,6 +116,15 @@
 				}
 			    this.$message.error('图片插入失败')
 			},
+			//视频点击事件
+			videoHandler(state) {
+				this.addRange = this.$refs.myQuillEditor.quill.getSelection()
+				if (state) {
+				  let fileInput = document.getElementById('imgInput')
+				  fileInput.click() // 加一个触发事件
+				}
+				this.uploadType = 'video'
+			}
 		},
 		watch : {
 			value (n) {
