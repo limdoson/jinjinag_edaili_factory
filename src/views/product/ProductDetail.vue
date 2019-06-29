@@ -117,7 +117,7 @@
 				</el-form-item>
 			</el-form>
 		</div>
-		<div class="text-center padding">
+		<div class="text-center padding steps">
 		
 			<el-button type="info" size="small" icon='el-icon-back' @click='$router.back()'>返回</el-button>
 			<el-button type="danger" size="small" @click='preStep' v-if='active > 0 '>上一步</el-button>
