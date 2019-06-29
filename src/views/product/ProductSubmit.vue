@@ -84,7 +84,7 @@
 						:header-cell-style = "{backgroundColor: '#fafafa'}"
 						stripe
 						ref="multipleTable">
-						<el-table-column prop='attr_name' label='规格/属性名称'>
+						<el-table-column prop='name' label='规格/属性名称'>
 						</el-table-column>
 						<el-table-column prop='supply_price' label='供应价'>
 							<template slot-scope='scope'>
