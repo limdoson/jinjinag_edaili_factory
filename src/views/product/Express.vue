@@ -5,7 +5,7 @@
 				<el-button type="primary" size="small" @click='show_dialog = true'>添加快递</el-button>
 			</el-col>
 			<el-col :span='10' style='line-height: 40px;'>
-				<p class="tips">快递公司编码，请下载<a href="">快递编号Excel</a>查看</p>
+				<p class="tips">快递公司编码，请下载<a href="https://laravel.linxmwx.cn/uploads/files/2019快递鸟接口支持快递公司编码.xlsx" target="_blank">快递编号Excel</a>查看</p>
 			</el-col>
 		</el-row>
 		<!-- 表格 -->
