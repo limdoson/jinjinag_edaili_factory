@@ -63,7 +63,7 @@
 		</el-row>
 		<!-- 订单数据表 -->
 		<ul class="order-list" v-if='list'>
-			<li v-for="item in list" :key='item.ind'>
+			<li v-for="item in list" :key='item.id'>
 				<!-- 订单头 -->
 				<h1 class="s-b">
 					<span>订单ID：{{item.id}}</span>
@@ -99,7 +99,7 @@
 					
 					<dd>
 						<el-button type="text" size="small" @click="$router.push('order-detail/'+item.id)">详情</el-button>
-						<el-button type="text" size="small" @click='deliverGoods(item)'>订单发货</el-button>
+						<el-button type="text" size="small" @click='deliverGoods(item)' v-if='item.status == 1'>订单发货</el-button>
 					</dd>
 				</dl>
 				<!-- 订单尾 -->
@@ -274,7 +274,7 @@
 				}).then(res => {
 					this.utils.msg(res.msg,() => {
 						this.resetData();
-						this.initData();
+						this.initData(this.status);
 					})
 				})
 			},
