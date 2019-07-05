@@ -35,7 +35,6 @@
 			<el-input v-model='sub_name' placeholder="请输入要添加的规格或属性名称"></el-input>
 			<span slot="footer" class="dialog-footer">
 			    <el-button @click="hideDialog" size='small'>取 消</el-button>
-			    <el-button @click="showDialog = false" size='small'>取 消</el-button>
 			    <el-button type="primary" @click="confirmAddSub" size='small'>确 定</el-button>
 		  	</span>
 		</el-dialog>

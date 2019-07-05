@@ -48,7 +48,7 @@
 			  background
 			  layout="prev, pager, next"
 			  :total="total"
-			  @current='currentChange'>
+			  @current-change='currentChange'>
 			</el-pagination>
 		</div>
 	</div>
