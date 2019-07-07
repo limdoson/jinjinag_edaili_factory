@@ -60,21 +60,24 @@ let menu = [
         sub_menu : [
             {
                 id : '5-1',
-                name : '交易流水',
+                name : '货款流水',
                 path : '/index/trade-data'
-            },{
-				id : '5-3',
-				name : '运费流水',
-				path : '/index/express-data'
-			},{
+            },
+			// {
+			// 	id : '5-3',
+			// 	name : '运费流水',
+			// 	path : '/index/express-data'
+			// },
+			{
 				id : '5-4',
 				name : '结算记录',
 				path : '/index/settlement-record'
-			},{
-                id : '5-2',
-                name : '导出财务数据',
-                path : '/index/finance-data-export'
-            }
+			}
+			// ,{
+   //              id : '5-2',
+   //              name : '导出财务数据',
+   //              path : '/index/finance-data-export'
+   //          }
         ]
     }
 ]

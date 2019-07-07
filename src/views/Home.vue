@@ -4,7 +4,7 @@
 			<div slot="header" class="clearfix">
 				<h1>财务统计(本月)</h1>
 			</div>
-			<ul class="finance-data s-b">
+			<ul class="finance-data s-b" v-if='account'>
 				<li>
 					<p>{{account.free}}</p>
 					<h1>无偿供货额</h1>

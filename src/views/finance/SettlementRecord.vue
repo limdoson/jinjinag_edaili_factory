@@ -1,6 +1,6 @@
 <template>
 	<div class="">
-		<el-row class='search-header' :gutter="10" >
+		<!-- <el-row class='search-header' :gutter="10" >
 			<el-col :span='4' class='text'>
 				<span class="green" style="line-height: 40px;">结算金额：￥10000</span>
 			</el-col>
@@ -24,7 +24,7 @@
 			<el-col :span='2'>
 				<el-button type='primary' size="small" icon="el-icon-search">搜索</el-button>
 			</el-col>
-		</el-row>
+		</el-row> -->
 		<!-- 表格 -->
 		<el-table
 			:data='list'
@@ -32,11 +32,13 @@
 			stripe
 			ref="multipleTable">
 			<el-table-column prop='id' label='ID'></el-table-column>
-			<el-table-column prop='operator' label='平台操作员'></el-table-column>
-			<el-table-column prop='project' label='结算项目'></el-table-column>
-			<el-table-column prop='set_acount' label='结算金额'></el-table-column>
-			<el-table-column prop='time' label='结算时间'></el-table-column>
-			<el-table-column prop='tips' label='描述'></el-table-column>
+<!-- 			<el-table-column prop='operator' label='平台操作员'></el-table-column> -->
+			<!-- <el-table-column prop='project' label='结算项目'></el-table-column> -->
+			
+			<el-table-column prop='balance' label='待结算货款'></el-table-column>
+			<el-table-column prop='money' label='本次结算金额'></el-table-column>
+			<el-table-column prop='add_time' label='结算时间'></el-table-column>
+			<el-table-column prop='remark' label='描述'></el-table-column>
 		</el-table>
 		<div class="pagenation s-b">
 			<div>
@@ -60,31 +62,29 @@
 				total : 100,
 				time : null,
 				search_type : null,
-				list : [
-					{
-						id :1,
-						operator : '林杜森',
-						set_acount : 1500,
-						time : '2018-02-02',
-						project : '货款',
-						tips : '由于存在无偿供货额，优先从无偿供货额中扣除'
-					},{
-						id :1,
-						operator : '林杜森',
-						set_acount : 1500,
-						project : '运费',
-						time : '2018-02-02',
-						tips : '-'
-					}
-				]
+				list :null,
+				page : 1,
+				limit :10
 			}
 		},
 		created () {
-			
+			this.initData()
 		},
 		
 		methods : {
-			
+			initData () {
+				this.http.post('/v1/f_account/getPurchaseLog',{
+					page : this.page,
+					limit : this.limit
+				}).then(res => {
+					this.total = res.data.total;
+					this.list = res.data.data;
+				})
+			},
+			currentChange (page) {
+				this.page = page;
+				this.initData();
+			}
 		},
 		//mounted () {},
 		// watch () {
